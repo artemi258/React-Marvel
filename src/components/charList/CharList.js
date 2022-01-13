@@ -78,6 +78,9 @@ class CharList extends Component{
                 this.onRequest(this.state.offset);
             }
         }
+        componentWillUnmount() {
+            window.removeEventListener('scroll', this.onScroll)
+        }
 
         componentDidMount() {
             this.onRequest();
@@ -90,6 +93,7 @@ class CharList extends Component{
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? <Chars focusRef={this.onFocus} onKeyClick={this.onKeyClick} char={char} props={this.props}/> : null;
+        console.log(content)
         return (
             <div className="char__list">
                 
