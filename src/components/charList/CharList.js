@@ -71,21 +71,9 @@ class CharList extends Component{
                 this.myRef.current.focus();
             }
         }
-        onScroll = () => {
-            let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight); // для старых браузеров
-
-            if (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight) {
-                this.onRequest(this.state.offset);
-            }
-        }
-        componentWillUnmount() {
-            window.removeEventListener('scroll', this.onScroll)
-        }
 
         componentDidMount() {
             this.onRequest();
-            window.addEventListener('scroll', this.onScroll)
-            
         }
 
     render() {
