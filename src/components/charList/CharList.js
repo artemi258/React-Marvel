@@ -50,7 +50,6 @@ const CharList = (props) => {
         const myRef = useRef([]);
         
        const onRef = (id) => {
-
             myRef.current[id].focus();
               } 
                       
@@ -59,10 +58,9 @@ const CharList = (props) => {
             onRequest()
         }, [])
 
-        // const {char, loading, error, newItemLoading, offset, ended} = this.state;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? <Chars/> : null;
+        const content = !(loading || error) ? chars() : null;
         return (
             <div className="char__list">
                 
@@ -78,7 +76,7 @@ const CharList = (props) => {
                 </button>
             </div>
         )
-        function Chars() {
+        function chars() {
             const content = char.map((item, i) => {
         
             const {name, thumbnail, id} = item;
