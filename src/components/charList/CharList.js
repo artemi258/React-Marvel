@@ -29,8 +29,7 @@ const CharList = (props) => {
 
       const  onRequest = (offset) => {
         setNewItemLoading(true)
-        console.log(loading)
-            // clearError();
+            clearError();
             getAllCharacters(offset)
             .then(onCharLoaded)
             .catch()
