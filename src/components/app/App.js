@@ -1,59 +1,27 @@
-import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
-import ComicsList from "../comicsList/ComicsList";
+import { MainPage, ComicsPage, SingleComic } from "../pages";
 
-import decoration from '../../resources/img/vision.png';
+
 
 
 
 const App = () => {
 
-    const [tab, setTab] = useState('Characters');
-
-    const [selectedChar, setSelectedChar] = useState(null)
-
-   const onCharSelected = (id) => {
-        setSelectedChar(id)
-    }
-
-    const onTab = (tab) => {
-        setTab(tab);
-    }
-
-    const content = () => {
-        if (tab === 'Characters') {
-            return (
-                <>
-                <RandomChar/>
-                    <div className="char__content">
-                        <ErrorBoundary>
-                        <CharList onCharSelected={onCharSelected}/>
-                        </ErrorBoundary>
-                        <ErrorBoundary>
-                        <CharInfo charId={selectedChar}/>
-                        </ErrorBoundary>
-                        
-                    </div>
-                    <img className="bg-decoration" src={decoration} alt="vision"/>
-                    </>
-            )
-        } else {
-            return <ComicsList/>;
-        }
-    }
-
         return (
+            <Router>
             <div className="app">
-                <AppHeader onTab={onTab}/>
+                <AppHeader/>
                 <main>
-               {content()}
-                    <img className="bg-decoration" src={decoration} alt="vision"/>
+                        <Routes>
+                            <Route path="/" element={<MainPage/>}/>
+                            <Route path="/comics" element={<ComicsPage/>}/>
+                            <Route path="/comics/:comicId" element={<SingleComic/>}/>
+                        </Routes>
                 </main>
             </div>
+            </Router>
+
         )
 }
 
