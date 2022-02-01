@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react/cjs/react.development';
+import { Link } from 'react-router-dom';
 import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
@@ -11,7 +12,7 @@ const CharInfo = (props) => {
     const [char, setChar] = useState(null)
 
     
-    const {getCharacter, loading, error, clearError} = useMarvelServices();
+    const {getCharacter, getComic, loading, error, clearError} = useMarvelServices();
 
     useEffect(() => {
         updaterChar();
@@ -83,7 +84,7 @@ const CharInfo = (props) => {
                     {comics.map((item, i) => {
                             return (
                         <li key={i} className="char__comics-item">
-                            {item.name}
+                            <Link to={`/comics/${item.resourceURI.split("/").pop()}`}>{item.name}</Link>
                         </li>
                             )
                         })}
