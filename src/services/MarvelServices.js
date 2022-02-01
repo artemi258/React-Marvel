@@ -22,6 +22,10 @@ const MarvelServices = () => {
         const res = await request(`${_apiBase}comics?limit=${limit}&offset=${offset}&${_apiKey}`);
                 return res.data.results.map(item => _transformComics(item, 'comics'));
     }
+    const getComic = async (id) => {
+        const res = await request(`${_apiBase}comics/${id}?${_apiKey}`);
+        return _transformComics(res.data.results[0]);
+    }
 
     const _transformCharacter = (char, name) => {
        const descr = !char.description ? "К сожалению, описания этого персонажа нет" : char.description;
@@ -51,7 +55,7 @@ const MarvelServices = () => {
         }
     }
 
-    return {getAllCharacters, getCharacter, getComics, loading, error, clearError}
+    return {getAllCharacters, getCharacter, getComics, loading, error, clearError, getComic}
 }
 
 export default MarvelServices;

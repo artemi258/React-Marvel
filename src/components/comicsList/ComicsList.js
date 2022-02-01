@@ -39,11 +39,11 @@ const ComicsList = () => {
         const content = char.map((item, i) => {
             return (
                     <li className="comics__item" key={i}>
-                        <a href={item.wiki}>
+                        <Link to={`${item.id}`}>
                             <img src={item.thumbnail} alt={item.name} className="comics__item-img"/>
                             <div className="comics__item-name">{item.name}</div>
                             <div className="comics__item-price">{item.price}</div>
-                        </a>
+                        </Link>
                     </li>
             )
         })
