@@ -12,6 +12,7 @@ const CharList = (props) => {
         const [newItemLoading, setNewItemLoading] = useState(false)
         const [offset, setOffset] = useState(210)
         const [ended, setEnded] = useState(false)
+        const [character, setCharacter] = useState(0)
     
    const {getAllCharacters, loading, error, clearError} = useMarvelServices();
 
@@ -24,10 +25,12 @@ const CharList = (props) => {
 
             setNewItemLoading(false)
             setOffset(offset => offset + 9)
+            setCharacter(character => character + 9)
             setEnded(ended)
         }
 
       const  onRequest = (offset) => {
+        console.log(`${offset} ${character}`)
         setNewItemLoading(true)
             clearError();
             getAllCharacters(offset)
@@ -44,7 +47,20 @@ const CharList = (props) => {
                       
 
         useEffect(() => {
-            onRequest()
+            if (localStorage.getItem('offset') > 0 && localStorage.getItem('character') > 0) {
+                setOffset(+(localStorage.getItem('offset')))
+                setCharacter(+(localStorage.getItem('character')))
+                onRequest(+(localStorage.getItem('offset')), +(localStorage.getItem('character')))
+            } else {
+                onRequest()
+            }
+            
+            return () => {
+                localStorage.setItem('offset', +offset)
+                localStorage.setItem('character', +character)
+            }
+                
+            
         }, [])
 
         const errorMessage = error ? <ErrorMessage/> : null;
@@ -53,8 +69,8 @@ const CharList = (props) => {
             <div className="char__list">
                 
                 {errorMessage}
-                {spinner}
                 {chars()}
+                {spinner}
                 <button className="button button__main button__long"
                         disabled={newItemLoading}
                         onClick={() => onRequest(offset)}

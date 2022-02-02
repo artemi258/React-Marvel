@@ -32,7 +32,7 @@ const ComicsList = () => {
         clearError();
         getComics(offset, 12)
         .then(onCharLoaded)
-        .catch()
+        .catch(() => onRequest(offset))
     }
 
     const comicsList = () => {
@@ -59,8 +59,8 @@ const ComicsList = () => {
     return (
         <div className="comics__list">
                 {errorMessage}
-                {spinner}
                 {comicsList()}
+                {spinner}
             <button disabled={newItemLoading} onClick={() => onRequest(offset)} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>
