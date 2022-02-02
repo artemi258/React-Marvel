@@ -16,7 +16,7 @@ const CharList = (props) => {
     
    const {getAllCharacters, loading, error, clearError} = useMarvelServices();
 
-      const  onCharLoaded = (charList) => {
+      const  onCharLoaded = async (charList) => {
             let ended = false;
             if (offset >= 1550) {
                 ended = true;
@@ -29,11 +29,11 @@ const CharList = (props) => {
             setEnded(ended)
         }
 
-      const  onRequest = (offset) => {
-        console.log(`${offset} ${character}`)
+      const  onRequest = (offset, character) => {
+        // console.log(`${offset} ${character}`)
         setNewItemLoading(true)
             clearError();
-            getAllCharacters(offset)
+            getAllCharacters(offset, character)
             .then(onCharLoaded)
             .catch()
         }
@@ -47,24 +47,23 @@ const CharList = (props) => {
                       
 
         useEffect(() => {
+            console.log(localStorage.getItem('character'))
+
             if (localStorage.getItem('offset') > 0 && localStorage.getItem('character') > 0) {
+
                 setOffset(+(localStorage.getItem('offset')))
                 setCharacter(+(localStorage.getItem('character')))
-                onRequest(+(localStorage.getItem('offset')), +(localStorage.getItem('character')))
+                onRequest(null, +(localStorage.getItem('character')))
             } else {
                 onRequest()
             }
-            
-            return () => {
-                localStorage.setItem('offset', +offset)
-                localStorage.setItem('character', +character)
-            }
-                
-            
+
         }, [])
 
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
+        localStorage.setItem('offset', offset)
+        localStorage.setItem('character', character)
         return (
             <div className="char__list">
                 
