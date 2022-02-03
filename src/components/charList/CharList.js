@@ -16,7 +16,7 @@ const CharList = (props) => {
     
    const {getAllCharacters, loading, error, clearError} = useMarvelServices();
 
-      const  onCharLoaded = async (charList) => {
+      const  onCharLoaded = (charList) => {
             let ended = false;
             if (offset >= 1550) {
                 ended = true;
@@ -30,7 +30,6 @@ const CharList = (props) => {
         }
 
       const  onRequest = (offset, character) => {
-        // console.log(`${offset} ${character}`)
         setNewItemLoading(true)
             clearError();
             getAllCharacters(offset, character)
@@ -45,15 +44,20 @@ const CharList = (props) => {
             myRef.current[id].focus();
               } 
                       
+        useEffect(() => {
+            if (offset > 210 && character > 0) {        //если новые данные еще не записались, то в локал не записывать
+                localStorage.setItem('offset', offset)
+                localStorage.setItem('character', character)
+            }
+        }, [offset, character])
 
         useEffect(() => {
-            console.log(localStorage.getItem('character'))
 
-            if (localStorage.getItem('offset') > 0 && localStorage.getItem('character') > 0) {
+            if (localStorage.getItem('offset') > 210 && localStorage.getItem('character') > 0) {  // если не первый запуск , то выполнять
 
-                setOffset(+(localStorage.getItem('offset')))
-                setCharacter(+(localStorage.getItem('character')))
-                onRequest(null, +(localStorage.getItem('character')))
+                setOffset(+(localStorage.getItem('offset')) - 9)       // если переходить с комиксов + 9 к лимиту и персонажам не делать
+                setCharacter(+(localStorage.getItem('character')) - 9)
+                onRequest(210, +(localStorage.getItem('character')))
             } else {
                 onRequest()
             }
@@ -62,8 +66,6 @@ const CharList = (props) => {
 
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
-        localStorage.setItem('offset', offset)
-        localStorage.setItem('character', character)
         return (
             <div className="char__list">
                 
