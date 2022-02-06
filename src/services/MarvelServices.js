@@ -27,19 +27,18 @@ const MarvelServices = () => {
         return _transformComics(res.data.results[0]);
     }
 
-    const _transformCharacter = (char, name) => {
+    const _transformCharacter = (char) => {
        const descr = !char.description ? "К сожалению, описания этого персонажа нет" : char.description;
        const description = descr.length > 200 ? descr.substr(0, 200) + "..." : descr;
 
         return {
                 id: char.id,
-                name: name === 'comics' ? char.title : char.name,
+                name: char.name,
                 description: description,
                 thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
                 homepage: char.urls[0].url,
-                wiki: name === 'comics' ? char.urls[0].url : char.urls[1].url,
-                price: name === 'comics' ? char.prices[0].price : null,
-                comics: name === 'comics' ? null : char.comics.items
+                wiki: char.urls[1].url,
+                comics: char.comics.items
         }
     }
 
