@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -11,6 +11,7 @@ const SingleComic = () => {
     const [comic, setComic] = useState(null);
     const {comicId} = useParams();
     const {getComic, loading, error, clearError} = useMarvelServices();
+    const history = useNavigate();
 
     useEffect(() => {
         updaterComic();
@@ -33,6 +34,9 @@ const SingleComic = () => {
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
+        if (error) {
+            history('/error')
+        }
 
     return (
         <>

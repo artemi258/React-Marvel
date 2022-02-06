@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -9,30 +9,48 @@ import './comicsList.scss';
 const ComicsList = () => {
     const [char, setChar] = useState([]);
     const [offset, setOffset] = useState(210);
-    const [newItemLoading, setNewItemLoading] = useState(false)
-
+    const [comics, setComics] = useState(0);
+    const [newItemLoading, setNewItemLoading] = useState(false);
+    const history = useNavigate();
 
     const {getComics, loading, error, clearError} = useMarvelServices();
 
     useEffect(() => {
-        onRequest();
+        // if (localStorage.getItem('offsetComics') > 210 && localStorage.getItem('comics') > 0) {  // если не первый запуск , то выполнять
+
+        //     setOffset(+(localStorage.getItem('offsetComics')) - 12)       // если переходить с комиксов + 9 к лимиту и персонажам не делать
+        //     setComics(+(localStorage.getItem('comics')) - 12)
+        //     onRequest(210, +(localStorage.getItem('comics')))
+        // } else {
+        //     onRequest(210, 12)
+        // }
+            onRequest(210, 12)
+
     }, [])
+
+    // useEffect(() => {
+    //     if (offset > 210 && comics > 0) {        //если новые данные еще не записались, то в локал не записывать
+    //         localStorage.setItem('offsetComics', offset)
+    //         localStorage.setItem('comics', comics)
+    //     }
+    // }, [offset, comics])
 
     const  onCharLoaded = (charList) => {
         setNewItemLoading(false)
 
         setChar(char => [...char, ...charList])
 
-        setOffset(offset => offset + 9)
+        setOffset(offset => offset + 12)
+        setComics(comics => comics + 12)
     }
 
-  const  onRequest = (offset) => {
+  const  onRequest = (offset, comics) => {
     setNewItemLoading(true)
 
         clearError();
-        getComics(offset, 12)
+        getComics(offset, comics)
         .then(onCharLoaded)
-        .catch(() => onRequest(offset))
+        .catch(() => onRequest(offset, 12))
     }
 
     const comicsList = () => {
@@ -53,15 +71,16 @@ const ComicsList = () => {
         
     }
 
-        const errorMessage = error ? <ErrorMessage/> : null;
+            if (error) {
+                history('/error')
+            }
         const spinner = loading ? <Spinner/> : null;
 
     return (
         <div className="comics__list">
-                {errorMessage}
                 {comicsList()}
                 {spinner}
-            <button disabled={newItemLoading} onClick={() => onRequest(offset)} className="button button__main button__long">
+            <button disabled={newItemLoading} onClick={() => onRequest(offset, 12)} className="button button__main button__long">
                 <div className="inner">load more</div>
             </button>
         </div>

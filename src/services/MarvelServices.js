@@ -20,7 +20,7 @@ const MarvelServices = () => {
     }
     const getComics = async (offset = _baseOffset, limit = _baseLimit) => {
         const res = await request(`${_apiBase}comics?limit=${limit}&offset=${offset}&${_apiKey}`);
-                return res.data.results.map(item => _transformComics(item, 'comics'));
+                return res.data.results.map(item => _transformComics(item));
     }
     const getComic = async (id) => {
         const res = await request(`${_apiBase}comics/${id}?${_apiKey}`);
