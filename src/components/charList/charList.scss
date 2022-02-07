@@ -45,3 +45,18 @@
         color: #fff;
     }
 }
+
+.charListAnimate {
+    &-enter {
+        opacity: 0;
+      }
+    &-enter-active {
+        opacity: 1;
+        transition: all 1000ms;
+        visibility: visible;
+      }
+    &-enter-done {
+        opacity: 1;
+        visibility: visible;
+    }
+}

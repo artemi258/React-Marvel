@@ -10,6 +10,25 @@
         display: grid;
         grid-template-columns: 180px auto;
         column-gap: 30px;
+        &-enter {
+            opacity: 0;
+          }
+        &-enter-active {
+            opacity: 1;
+            transition: all 1000ms;
+          }
+        &-enter-done {
+            opacity: 1;
+        }
+        &-exit {
+            display: none;
+          }
+        &-exit-active {
+            display: none;
+          }
+        &-exit-active-done {
+            display: none;
+          }
     }
     &__img {
         width: 180px;

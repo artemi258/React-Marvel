@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react/cjs/react.development';
+import { Transition , CSSTransition, TransitionGroup, SwitchTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -9,7 +10,8 @@ import './charInfo.scss';
 
 const CharInfo = (props) => {
 
-    const [char, setChar] = useState(null)
+    const [char, setChar] = useState(null);
+    const [fade, setFade] = useState(false);
 
     
     const {getCharacter, getComic, loading, error, clearError} = useMarvelServices();
@@ -19,6 +21,7 @@ const CharInfo = (props) => {
     }, [])
 
     useEffect(() => {
+        setFade(false)
         updaterChar();
     }, [props.charId])
 
@@ -35,6 +38,7 @@ const CharInfo = (props) => {
     }
 
     const onCharLoaded = (char) => {
+        setFade(true)
         setChar(char)
     }
 
@@ -43,12 +47,13 @@ const CharInfo = (props) => {
         const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error || !char) ? <View char={char}/> : null;
         return (
-            <div className="char__info">
-               {sceleton}
-               {errorMessage}
-               {spinner}
-               {content}
-            </div>
+                <div className="char__info">
+                {sceleton}
+                {errorMessage}
+                {spinner}
+                {content}
+
+                </div>
         )
 }
 
@@ -58,10 +63,11 @@ const CharInfo = (props) => {
         if (comics.length > 10) {
             comics.length = 10;
         }
-
         return (
-            <>
-             <div className="char__basics">
+            <TransitionGroup>
+            <CSSTransition key={name} timeout={1000} classNames="charInfoAnimate">
+            <div>
+        <div className="char__basics">
                     <img src={thumbnail} alt={name} style={{objectFit: objFit}}/>
                     <div>
                         <div className="char__info-name">{name}</div>
@@ -89,8 +95,12 @@ const CharInfo = (props) => {
                             )
                         })}
                 </ul>
-            </>
+            </div>
+            </CSSTransition>
+            </TransitionGroup>
         )
+        
+
     }
 
 export default CharInfo;

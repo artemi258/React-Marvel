@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import useMarvelServices from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
@@ -13,6 +14,7 @@ const CharList = (props) => {
         const [offset, setOffset] = useState(210)
         const [ended, setEnded] = useState(false)
         const [character, setCharacter] = useState(0)
+        const [charAnimate, setCharAnimate] = useState(false);
     
    const {getAllCharacters, loading, error, clearError} = useMarvelServices();
 
@@ -26,10 +28,12 @@ const CharList = (props) => {
             setNewItemLoading(false)
             setOffset(offset => offset + 9)
             setCharacter(character => character + 9)
+            setCharAnimate(true)
             setEnded(ended)
         }
 
       const  onRequest = (offset, character) => {
+        setCharAnimate(false)
         setNewItemLoading(true)
             clearError();
             getAllCharacters(offset, character)
@@ -66,6 +70,7 @@ const CharList = (props) => {
 
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
+
         return (
             <div className="char__list">
                 
@@ -85,29 +90,33 @@ const CharList = (props) => {
         
             const {name, thumbnail, id} = item;
             const objFit = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? "contain" : "cover";
-            return (
-            <li className="char__item" key={id}
-            onClick={() => {
-                props.onCharSelected(id);
-                onRef(i)
-            }}
-            tabIndex={0}
-            onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                    props.onCharSelected(id);
-                    onRef(i)
-                 }
-            }}
-            ref={ref => myRef.current[i] = ref}>
-                <img src={thumbnail} style={{objectFit: objFit}} alt={name}/>
-                <div className="char__name">{name}</div>
-            </li> 
+            return ( 
+            <CSSTransition key={id} timeout={1000} classNames="charListAnimate">
+                    <li className="char__item" key={id}
+                    onClick={() => {
+                        props.onCharSelected(id);
+                        onRef(i)
+                    }}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            props.onCharSelected(id);
+                            onRef(i)
+                        }
+                    }}
+                    ref={ref => myRef.current[i] = ref}>
+                        <img src={thumbnail} style={{objectFit: objFit}} alt={name}/>
+                        <div className="char__name">{name}</div>
+                    </li> 
+            </CSSTransition>
             )
         }) 
                     return   <ul className="char__grid">
+                        <TransitionGroup component={null}>
                                 {content}
-                                </ul>
-        
+                        </TransitionGroup>
+                             </ul>
+
                 }
 }
 

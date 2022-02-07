@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react/cjs/react.development';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import useMarvelServices from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -35,6 +36,7 @@ const RandomChar = () => {
         const content = !(loading || error) ? <View char={char}/> : null;
 
         return (
+            
             <div className="randomchar">
                 {errorMessage}
                 {spinner}
@@ -57,13 +59,14 @@ const RandomChar = () => {
 }
 
 const View = ({char}) => {
+    const { name, description, thumbnail, homepage, wiki} = char;
 
-    const {name, description, thumbnail, homepage, wiki} = char;
     const objFit = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? "contain" : "cover";
-
-    return (
-        <div className="randomchar__block">
-                    <img src={thumbnail} style={{objectFit: objFit}} alt="Random character" className="randomchar__img"/>
+    const content = 
+    [
+        <CSSTransition key={name} timeout={1000} classNames="randomchar__block">
+            <div className="randomchar__block">
+               <img src={thumbnail} style={{objectFit: objFit}} alt="Random character" className="randomchar__img"/>
                     <div className="randomchar__info">
                         <p className="randomchar__name">{name}</p>
                         <p className="randomchar__descr">
@@ -77,8 +80,14 @@ const View = ({char}) => {
                                 <div className="inner">Wiki</div>
                             </a>
                         </div>
-                    </div>
-        </div>
+                    </div>     
+            </div>
+        </CSSTransition>
+        ]
+    return (
+        <TransitionGroup component={null}>
+            {content}
+        </TransitionGroup>
     )
 }
 
