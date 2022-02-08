@@ -10,6 +10,16 @@
     }
     &__item {
         transition: 0.3s transform;
+        &-enter {
+            opacity: 0;
+          }
+        &-enter-active {
+            opacity: 1;
+            transition: all 1000ms;
+          }
+        &-enter-done {
+            opacity: 1;
+        }
         &-img {
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
             width: 225px;

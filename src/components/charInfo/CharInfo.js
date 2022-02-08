@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react/cjs/react.development';
-import { Transition , CSSTransition, TransitionGroup, SwitchTransition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -64,8 +64,8 @@ const CharInfo = (props) => {
             comics.length = 10;
         }
         return (
-            <TransitionGroup>
-            <CSSTransition key={name} timeout={1000} classNames="charInfoAnimate">
+            <TransitionGroup component={null}>
+            <CSSTransition unmountOnExit={true} mountOnEnter={true} key={name} timeout={1000} classNames="charInfoAnimate">
             <div>
         <div className="char__basics">
                     <img src={thumbnail} alt={name} style={{objectFit: objFit}}/>
@@ -96,8 +96,8 @@ const CharInfo = (props) => {
                         })}
                 </ul>
             </div>
-            </CSSTransition>
-            </TransitionGroup>
+            </CSSTransition> 
+            </TransitionGroup> 
         )
         
 
