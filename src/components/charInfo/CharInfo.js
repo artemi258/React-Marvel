@@ -1,28 +1,25 @@
-import { useState, useEffect } from 'react/cjs/react.development';
-import { Transition , CSSTransition, TransitionGroup, SwitchTransition } from 'react-transition-group';
+import { useState, useEffect } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import useMarvelServices from '../../services/MarvelServices';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Spinner from '../spinner/Spinner';
-import Sceleton from '../skeleton/Skeleton';
+import setContent from '../../utils/setContent';
 
 import './charInfo.scss';
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState(null);
-    const [fade, setFade] = useState(false);
 
     
-    const {getCharacter, getComic, loading, error, clearError} = useMarvelServices();
-
+    const {getCharacter, clearError, process, setProcess} = useMarvelServices();
     useEffect(() => {
         updaterChar();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-        setFade(false)
         updaterChar();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.charId])
 
    const updaterChar = () => {
@@ -34,31 +31,22 @@ const CharInfo = (props) => {
 
         getCharacter(charId)
         .then(onCharLoaded)
-        .catch()
+        .then(() => setProcess('confirmed'));
     }
 
     const onCharLoaded = (char) => {
-        setFade(true)
         setChar(char)
     }
 
-        const sceleton = char || loading || error ? null : <Sceleton/>
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error || !char) ? <View char={char}/> : null;
         return (
                 <div className="char__info">
-                {sceleton}
-                {errorMessage}
-                {spinner}
-                {content}
-
+                    {setContent(process, View, char)}
                 </div>
         )
 }
 
-    const View = ({char}) => {
-        const {name, description, thumbnail, homepage, wiki, comics} = char;
+    const View = ({data}) => {
+        const {name, description, thumbnail, homepage, wiki, comics} = data;
         const objFit = thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg" ? "contain" : "cover";
         if (comics.length > 10) {
             comics.length = 10;
@@ -90,7 +78,7 @@ const CharInfo = (props) => {
                     {comics.map((item, i) => {
                             return (
                         <li key={i} className="char__comics-item">
-                            <Link to={`/comics/${item.resourceURI.split("/").pop()}`}>{item.name}</Link>
+                            <Link to={`/marvelWeb/comics/${item.resourceURI.split("/").pop()}`}>{item.name}</Link>
                         </li>
                             )
                         })}

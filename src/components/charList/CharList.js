@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
+import setContent from '../../utils/setContent';
+
 import useMarvelServices from '../../services/MarvelServices';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charList.scss';
 
@@ -13,10 +13,8 @@ const CharList = (props) => {
         const [newItemLoading, setNewItemLoading] = useState(false)
         const [offset, setOffset] = useState(210)
         const [ended, setEnded] = useState(false)
-        const [character, setCharacter] = useState(0)
-        const [charAnimate, setCharAnimate] = useState(false);
     
-   const {getAllCharacters, loading, error, clearError} = useMarvelServices();
+   const {getAllCharacters, clearError, process, setProcess} = useMarvelServices();
 
       const  onCharLoaded = (charList) => {
             let ended = false;
@@ -27,18 +25,15 @@ const CharList = (props) => {
 
             setNewItemLoading(false)
             setOffset(offset => offset + 9)
-            setCharacter(character => character + 9)
-            setCharAnimate(true)
             setEnded(ended)
         }
 
       const  onRequest = (offset, character) => {
-        setCharAnimate(false)
         setNewItemLoading(true)
             clearError();
             getAllCharacters(offset, character)
             .then(onCharLoaded)
-            .catch()
+            .then(() => setProcess('confirmed'));
         }
 
 
@@ -47,36 +42,21 @@ const CharList = (props) => {
        const onRef = (id) => {
             myRef.current[id].focus();
               } 
-                      
-        useEffect(() => {
-            if (offset > 210 && character > 0) {        //если новые данные еще не записались, то в локал не записывать
-                localStorage.setItem('offset', offset)
-                localStorage.setItem('character', character)
-            }
-        }, [offset, character])
 
         useEffect(() => {
-
-            if (localStorage.getItem('offset') > 210 && localStorage.getItem('character') > 0) {  // если не первый запуск , то выполнять
-
-                setOffset(+(localStorage.getItem('offset')) - 9)       // если переходить с комиксов + 9 к лимиту и персонажам не делать
-                setCharacter(+(localStorage.getItem('character')) - 9)
-                onRequest(210, +(localStorage.getItem('character')))
-            } else {
                 onRequest()
-            }
-
+                // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
 
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
+        const content = useMemo(() => {
+           return setContent(process, () => chars())
+           // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [process]);
 
         return (
             <div className="char__list">
-                
-                {errorMessage}
-                {chars()}
-                {spinner}
+                {process === 'loading' ? chars() : null}
+                {content}
                 <button className="button button__main button__long"
                         disabled={newItemLoading}
                         onClick={() => onRequest(offset)}

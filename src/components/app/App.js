@@ -5,7 +5,9 @@ import Spinner from "../spinner/Spinner";
 
 const MainPage = lazy(() => import("../pages/MainPage"))
 const ComicsPage = lazy(() => import("../pages/ComicsPage"))
-const SingleComic = lazy(() => import("../pages/SingleComic"))
+const SingleComicLayout = lazy(() => import("../pages/singleComicLayout/SingleComicLayout"))
+const SingleCharacterLayout = lazy(() => import("../pages/singleCharacterLayout/SingleCharacterLayout"))
+const SinglePage = lazy(() => import("../pages/SinglePage"))
 const Page404 = lazy(() => import("../pages/404"))
 
 
@@ -18,10 +20,13 @@ const App = () => {
                 <main>
                     <Suspense fallback={<Spinner/>}>
                         <Routes>
-                            <Route path="/" element={<MainPage/>}/>
-                            <Route path="/comics" element={<ComicsPage/>}/>
-                            <Route path="/comics/:comicId" element={<SingleComic/>}/>
-                            <Route path="*" element={<Page404/>}/>
+                            <Route path="/marvelWeb">
+                                <Route index element={<MainPage/>}/>
+                                <Route path="character/:id" element={<SinglePage Component={SingleCharacterLayout} dataType={"character"}/>}/>
+                                <Route path="comics" element={<ComicsPage/>}/>
+                                <Route path="comics/:id" element={<SinglePage Component={SingleComicLayout} dataType={"comic"}/>}/>
+                                <Route path="*" element={<Page404/>}/>
+                            </Route>
                         </Routes>
                     </Suspense>
                 </main>
