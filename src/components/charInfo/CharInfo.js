@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { useState, useEffect } from 'react';
-=======
-import { useState, useEffect } from 'react/cjs/react.development';
->>>>>>> c274475a72e28e226f8a76c52cfe52d6d8b24df5
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import useMarvelServices from '../../services/MarvelServices';

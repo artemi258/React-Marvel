@@ -1,12 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-<<<<<<< HEAD
-
-=======
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
->>>>>>> c274475a72e28e226f8a76c52cfe52d6d8b24df5
 import useMarvelServices from '../../services/MarvelServices';
 import setContent from '../../utils/setContent';
+
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import './comicsList.scss';
 
