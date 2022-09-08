@@ -1,6 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 
+=======
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+>>>>>>> c274475a72e28e226f8a76c52cfe52d6d8b24df5
 import useMarvelServices from '../../services/MarvelServices';
 import setContent from '../../utils/setContent';
 
@@ -40,6 +44,7 @@ const ComicsList = () => {
     const comicsList = () => {
         const content = char.map((item, i) => {
             return (
+                <CSSTransition key={item.name} classNames="comics__item" timeout={1000}>
                     <li className="comics__item" key={i}>
                         <Link to={`/marvelWeb/comics/${item.id}`}>
                             <img src={item.thumbnail} alt={item.name} className="comics__item-img"/>
@@ -47,10 +52,13 @@ const ComicsList = () => {
                             <div className="comics__item-price">{item.price}</div>
                         </Link>
                     </li>
+                    </CSSTransition>
             )
         })
             return <ul className="comics__grid">
+                <TransitionGroup component={null}>
                         {content}
+                </TransitionGroup>
                     </ul>;
         
     }
